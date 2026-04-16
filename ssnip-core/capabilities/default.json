@@ -1,0 +1,22 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default capability",
+  "windows": ["main", "overlay", "notification0", "notification1", "notification2", "notification3", "notification4", "vidnotif0", "editor", "floating*"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-close",
+    "core:window:allow-hide",
+    "core:window:allow-minimize",
+    "core:window:allow-show",
+    "core:window:allow-set-focus",
+    "core:window:allow-start-dragging",
+    "core:webview:allow-create-webview-window",
+    "dialog:default",
+    "notification:default",
+    "notification:allow-notify",
+    "notification:allow-is-permission-granted",
+    "notification:allow-request-permission",
+    "drag:default"
+  ]
+}

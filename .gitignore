@@ -1,0 +1,35 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+
+# Rust / Tauri
+target/
+ssnip-core/target/
+ssnip-core/gen/schemas/
+
+# IDE and local tooling
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.claude/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Sidecar binaries - developers fetch their own per target triple.
+# See ssnip-core/binaries/README.txt.
+ssnip-core/binaries/ffmpeg-*
+!ssnip-core/binaries/README.txt
