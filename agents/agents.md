@@ -22,6 +22,7 @@ Read this file first. Follow it exactly.
 - Do not ask whether to run the workflow above.
 - Execute end-to-end by default.
 - Only ask when blocked by missing credentials, missing access, or unknown required target.
+- Exception: ask before triggering the GitHub release workflow because it is slow.
 
 ## Safety Guardrails
 
@@ -51,3 +52,30 @@ Read this file first. Follow it exactly.
 
 - `git push` alone does NOT trigger in-app update notice.
 - Notice appears only after a newer built version is installed and launched.
+
+## Release Workflow Rule (Ask First)
+
+- Before running release workflow, ask: `Run release workflow now? (takes ~10-25 min)`.
+- Do not run release workflow unless user says yes.
+
+## Release Workflow Steps (For Simple LLMs)
+
+Use these exact steps:
+
+1. Confirm clean state:
+   - `git status --short`
+2. Ensure version bump exists in all 3 files:
+   - `package.json`
+   - `ssnip-core/tauri.conf.json`
+   - `ssnip-core/Cargo.toml`
+3. Verify build:
+   - `npm run build`
+4. Commit and push:
+   - `git add -A`
+   - `git commit -m "chore(release): bump version to x.y.z"`
+   - `git push`
+5. Ask user if release workflow should run now.
+6. If user says yes, trigger and report link:
+   - `gh workflow run release.yml`
+   - `gh run list --workflow release.yml --limit 1`
+7. Tell user to wait for green status, then install latest GitHub Release build.
