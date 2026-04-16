@@ -124,16 +124,20 @@ export default function App() {
     const checkVersionChange = async () => {
       try {
         const currentVersion = await getVersion();
-        const lastSeenKey = "synapsesnip:lastSeenVersion";
+        const installedKey = "synapsesnip:installedOnce";
         const dismissedKey = "synapsesnip:dismissedUpdateVersion";
-        const previousVersion = localStorage.getItem(lastSeenKey);
+        const installedOnce = localStorage.getItem(installedKey);
         const dismissedVersion = localStorage.getItem(dismissedKey);
 
-        if (!cancelled && previousVersion && previousVersion !== currentVersion && dismissedVersion !== currentVersion) {
-          setUpdateBannerVersion(currentVersion);
+        if (!installedOnce) {
+          localStorage.setItem(installedKey, "1");
+          localStorage.setItem(dismissedKey, currentVersion);
+          return;
         }
 
-        localStorage.setItem(lastSeenKey, currentVersion);
+        if (!cancelled && dismissedVersion !== currentVersion) {
+          setUpdateBannerVersion(currentVersion);
+        }
       } catch (error) {
         console.error("Failed to check app version", error);
       }
