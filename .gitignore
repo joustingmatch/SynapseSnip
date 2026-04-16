@@ -33,3 +33,4 @@ Thumbs.db
 # See ssnip-core/binaries/README.txt.
 ssnip-core/binaries/ffmpeg-*
 !ssnip-core/binaries/README.txt
+!ssnip-core/binaries/ffmpeg-x86_64-pc-windows-msvc.exe

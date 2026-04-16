@@ -38,6 +38,8 @@ Read this file first. Follow it exactly.
   - `ssnip-core/target/`
 - Before committing, run `git status --short` and ensure only intended files are staged.
 - If unexpected changes are present, stop and report them.
+- Do not create or restore `ssnip-docs/` or design-doc files unless the user explicitly requests docs.
+- Prefer code/config changes over documentation churn.
 
 ## Versioning Rules
 
