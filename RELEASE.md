@@ -14,7 +14,12 @@ Bump the same version in all three files:
 
 - `npm test`
 - `npm run build`
-- `npm run tauri build`
+- `npm run tauri:build:signed`
+
+If you see `A public key has been found, but no private key`, set:
+
+- `$env:TAURI_SIGNING_PRIVATE_KEY_PATH="$env:USERPROFILE\.tauri\synapsesnip.key"`
+- `$env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD="your-password"` (only if your key has one)
 
 ## 3) Commit
 

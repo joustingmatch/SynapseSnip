@@ -1365,157 +1365,41 @@
 }
 
 /* ============================================================================
-   SYNAPSE LOGO - Neural Network / Circuit Typography
+   SYNAPSE LOGO - Refined Neural Network Typography
+   
+   Quiet design principles:
+   - No constant animations
+   - Motion only on hover
+   - Subtle, refined transitions
+   - Restrained glow effects
    ============================================================================ */
 
 .synapse-logo {
   position: relative;
-  transition: filter 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: filter 350ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .synapse-logo:hover {
-  filter: drop-shadow(0 0 30px var(--accent-glow));
-}
-
-.synapse-logo[data-hovered="true"] {
-  filter: drop-shadow(0 0 40px var(--accent-glow)) drop-shadow(0 0 80px var(--accent-subtle));
+  filter: drop-shadow(0 0 20px var(--accent-subtle));
 }
 
 .synapse-logo-inner {
-  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.3));
-  transition: filter 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: transform 350ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.synapse-logo:hover .synapse-logo-inner {
-  filter: drop-shadow(0 0 30px var(--accent-glow));
-}
-
-.synapse-letter-svg {
+.synapse-letter {
   overflow: visible;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
-/* Path entrance animation - draw in effect */
-@keyframes path-draw-in {
-  0% {
-    stroke-dashoffset: 100;
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.7;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 0.7;
-  }
+/* Path hover states - subtle light up */
+.synapse-path {
+  transition: all 350ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Node entrance animation */
-@keyframes node-pop-in {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.3);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Node ring pulse */
-@keyframes node-ring-pulse {
-  0%, 100% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.3;
-    transform: scale(1.3);
-  }
-}
-
-/* Neural activation pulse - travels along paths */
-@keyframes neural-pulse-travel {
-  0% {
-    offset-distance: 0%;
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  10% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  90% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-    transform: scale(0.5);
-  }
-}
-
-/* Entrance animations for paths */
-.synapse-logo[data-animated="true"] .synapse-path {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: path-draw-in 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-}
-
-/* Entrance animations for nodes */
-.synapse-logo[data-animated="true"] .synapse-node {
-  opacity: 0;
-  animation: node-pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  transform-origin: center;
-}
-
-/* Entrance animations for node rings */
-.synapse-logo[data-animated="true"] .synapse-node-ring {
-  opacity: 0;
-  animation: node-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-             node-ring-pulse 3s ease-in-out infinite 0.6s;
-  transform-origin: center;
-}
-
-/* Hover states - neurons light up */
-.synapse-logo[data-hovered="true"] .synapse-path {
-  opacity: 0.95 !important;
-  stroke-width: 2.5;
-  filter: drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 8px var(--accent-glow));
-  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.synapse-logo[data-hovered="true"] .synapse-node {
-  r: 3.5;
-  filter: drop-shadow(0 0 6px var(--accent)) drop-shadow(0 0 12px var(--accent-glow)) !important;
-  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.synapse-logo[data-hovered="true"] .synapse-node-ring {
-  opacity: 0.5 !important;
-  r: 8;
-  stroke-width: 1;
-  filter: drop-shadow(0 0 8px var(--accent)) !important;
-  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-/* Letter hover lift */
-.synapse-letter-svg {
-  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.synapse-logo:hover .synapse-letter-svg {
-  transform: translateY(-2px);
-}
-
-/* Individual letter response on hover */
-.synapse-letter-svg:hover {
-  transform: translateY(-3px) !important;
-  filter: brightness(1.2);
+/* Node hover states - refined glow */
+.synapse-node {
+  transition: all 350ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* ============================================================================
@@ -1536,10 +1420,5 @@
     animation: none !important;
     outline: 2px solid var(--accent) !important;
     outline-offset: 2px !important;
-  }
-  
-  .synapse-pixel {
-    animation: none !important;
-    transition: none !important;
   }
 }

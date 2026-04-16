@@ -5,6 +5,7 @@ import { check, type Update } from "@tauri-apps/plugin-updater";
 import { DelayTimer } from "./components/DelayTimer";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { TitleBar } from "./components/TitleBar";
+import { UpdateModal } from "./components/UpdateModal";
 import {
   beginCapture,
   copyImageToClipboard,
@@ -93,7 +94,6 @@ export default function App() {
   const setShowSettings = useAppStore((s) => s.setShowSettings);
   const [isLoaded, setIsLoaded] = useState(false);
   const [availableUpdate, setAvailableUpdate] = useState<Update | null>(null);
-  const [updateBannerVersion, setUpdateBannerVersion] = useState<string | null>(null);
   const [isInstallingUpdate, setIsInstallingUpdate] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
 
@@ -136,7 +136,6 @@ export default function App() {
 
         if (!cancelled && dismissedVersion !== update.version) {
           setAvailableUpdate(update);
-          setUpdateBannerVersion(update.version);
         }
       } catch (error) {
         console.error("Failed to check for updates", error);
@@ -150,12 +149,11 @@ export default function App() {
     };
   }, []);
 
-  const dismissUpdateBanner = useCallback(() => {
-    if (!updateBannerVersion) return;
-    localStorage.setItem("synapsesnip:dismissedRemoteUpdateVersion", updateBannerVersion);
+  const dismissUpdate = useCallback(() => {
+    if (!availableUpdate) return;
+    localStorage.setItem("synapsesnip:dismissedRemoteUpdateVersion", availableUpdate.version);
     setAvailableUpdate(null);
-    setUpdateBannerVersion(null);
-  }, [updateBannerVersion]);
+  }, [availableUpdate]);
 
   const installUpdate = useCallback(async () => {
     if (!availableUpdate || isInstallingUpdate) return;
@@ -167,7 +165,6 @@ export default function App() {
       await availableUpdate.downloadAndInstall();
       localStorage.setItem("synapsesnip:dismissedRemoteUpdateVersion", availableUpdate.version);
       setAvailableUpdate(null);
-      setUpdateBannerVersion(null);
     } catch (error) {
       console.error("Failed to install update", error);
       setUpdateError("Install failed. Try again.");
@@ -324,61 +321,7 @@ export default function App() {
             transitionDelay: '100ms'
           }}
         >
-          {updateBannerVersion && (
-            <div
-              className="mb-4 rounded-md px-3 py-2"
-              style={{
-                background: "var(--surface-active)",
-                border: "1px solid var(--border-strong)",
-              }}
-              role="status"
-              aria-live="polite"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div
-                    className="text-xs font-medium uppercase tracking-wide"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    Update Available
-                  </div>
-                  <div
-                    className="text-xs mt-1"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    SynapseSnip v{updateBannerVersion} is ready to install.
-                  </div>
-                  {updateError && (
-                    <div className="text-xs mt-1" style={{ color: "var(--error)" }}>
-                      {updateError}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => void installUpdate()}
-                    className="text-xs"
-                    style={{ color: "var(--text-primary)" }}
-                    aria-label="Install available update"
-                    disabled={isInstallingUpdate}
-                  >
-                    {isInstallingUpdate ? "Installing..." : "Install"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={dismissUpdateBanner}
-                    className="text-xs"
-                    style={{ color: "var(--text-muted)" }}
-                    aria-label="Dismiss update notice"
-                    disabled={isInstallingUpdate}
-                  >
-                    Dismiss
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+
 
           <div className="flex items-center justify-between mb-3">
             <span 
@@ -499,6 +442,15 @@ export default function App() {
 
       {countdown > 0 && <DelayTimer onDone={() => setCountdown(0)} />}
       {showSettings && <SettingsPanel />}
+      
+      {/* Update Modal */}
+      <UpdateModal
+        update={availableUpdate}
+        onInstall={installUpdate}
+        onDismiss={dismissUpdate}
+        isInstalling={isInstallingUpdate}
+        error={updateError}
+      />
     </div>
   );
 }
