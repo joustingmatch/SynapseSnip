@@ -1370,15 +1370,29 @@
 
 .synapse-logo {
   position: relative;
+  transition: filter 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.synapse-logo:hover {
+  filter: drop-shadow(0 0 30px var(--accent-glow));
+}
+
+.synapse-logo[data-hovered="true"] {
+  filter: drop-shadow(0 0 40px var(--accent-glow)) drop-shadow(0 0 80px var(--accent-subtle));
 }
 
 .synapse-logo-inner {
   filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.3));
+  transition: filter 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.synapse-logo:hover .synapse-logo-inner {
+  filter: drop-shadow(0 0 30px var(--accent-glow));
 }
 
 .synapse-letter-svg {
   overflow: visible;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 /* Path entrance animation - draw in effect */
@@ -1423,6 +1437,28 @@
   }
 }
 
+/* Neural activation pulse - travels along paths */
+@keyframes neural-pulse-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
 /* Entrance animations for paths */
 .synapse-logo[data-animated="true"] .synapse-path {
   stroke-dasharray: 100;
@@ -1445,32 +1481,41 @@
   transform-origin: center;
 }
 
-/* Hover states */
-.synapse-logo:hover .synapse-path {
-  opacity: 0.9 !important;
-  stroke-width: 2;
+/* Hover states - neurons light up */
+.synapse-logo[data-hovered="true"] .synapse-path {
+  opacity: 0.95 !important;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 8px var(--accent-glow));
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.synapse-logo:hover .synapse-node {
-  r: 3;
-  filter: drop-shadow(0 0 4px currentColor);
-  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+.synapse-logo[data-hovered="true"] .synapse-node {
+  r: 3.5;
+  filter: drop-shadow(0 0 6px var(--accent)) drop-shadow(0 0 12px var(--accent-glow)) !important;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.synapse-logo:hover .synapse-node-ring {
-  opacity: 0.4 !important;
-  r: 6;
+.synapse-logo[data-hovered="true"] .synapse-node-ring {
+  opacity: 0.5 !important;
+  r: 8;
+  stroke-width: 1;
+  filter: drop-shadow(0 0 8px var(--accent)) !important;
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 /* Letter hover lift */
 .synapse-letter-svg {
-  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.synapse-logo:hover .synapse-letter-svg:hover {
+.synapse-logo:hover .synapse-letter-svg {
   transform: translateY(-2px);
+}
+
+/* Individual letter response on hover */
+.synapse-letter-svg:hover {
+  transform: translateY(-3px) !important;
+  filter: brightness(1.2);
 }
 
 /* ============================================================================
