@@ -54,6 +54,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_drag::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             let handle = app.handle().clone();
             let s = settings::read_settings(&handle).unwrap_or_default();
@@ -206,3 +207,4 @@ pub fn run() {
 
     recorder::cleanup_all_recordings();
 }
+

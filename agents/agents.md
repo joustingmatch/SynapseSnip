@@ -1,14 +1,14 @@
-# SynapseSnip Agent Rules
+# AGENT OPERATING RULES (SynapseSnip)
 
-These rules apply to any AI/LLM making changes in this repository.
+Read this file first. Follow it exactly.
 
-## Core Workflow (Required)
+## Non-Negotiable Workflow
 
-1. Make the requested code changes.
-2. Run verification:
+1. Implement the requested change.
+2. Verify:
    - `npm run build`
-   - If tests were touched: `npm test`
-3. If the change is intended to be shipped, bump patch version in all three files to the same value:
+   - Run `npm test` if tests or core logic changed.
+3. For any shipped change, bump patch version in all 3 files to the SAME value:
    - `package.json`
    - `ssnip-core/tauri.conf.json`
    - `ssnip-core/Cargo.toml`
@@ -17,19 +17,35 @@ These rules apply to any AI/LLM making changes in this repository.
    - `git commit -m "<clear message>"`
    - `git push`
 
-## Versioning Rule
+## Autonomy (Do Not Ask)
 
-- Never bump only one version file.
-- Always keep all three versions identical.
-- Use patch bumps by default (`x.y.Z`).
+- Do not ask whether to run the workflow above.
+- Execute end-to-end by default.
+- Only ask when blocked by missing credentials, missing access, or unknown required target.
 
-## Safety Rules
+## Safety Guardrails
 
-- Do not delete or rewrite unrelated files.
-- Do not commit `node_modules`, `dist`, or `ssnip-core/target`.
+- Never run destructive git/file commands unless explicitly requested:
+  - `git reset --hard`
+  - `git checkout -- <file>`
+  - `git clean -fd`
+  - `git push --force`
+- Never delete or rewrite unrelated files.
 - Respect `.gitignore`.
+- Never commit build/vendor artifacts:
+  - `node_modules/`
+  - `dist/`
+  - `ssnip-core/target/`
+- Before committing, run `git status --short` and ensure only intended files are staged.
+- If unexpected changes are present, stop and report them.
 
-## Update Banner Context
+## Versioning Rules
 
-The in-app update banner appears when a newly installed app version differs from the last seen version.
-`git push` alone does not trigger it.
+- Keep version values identical across all 3 required files.
+- Default to patch bumps (`x.y.Z`).
+- Never bump only one version file.
+
+## Update Banner Reality Check
+
+- `git push` alone does NOT trigger in-app update notice.
+- Notice appears only after a newer built version is installed and launched.
