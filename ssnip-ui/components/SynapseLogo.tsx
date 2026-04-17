@@ -205,10 +205,10 @@ export function SynapseLogo({ className = "" }: SynapseLogoProps) {
 
     // Progressive opacity: letters fade in from left to right
     const positionRatio = letterIndex / (totalLetters - 1);
-    const baseOpacity = 0.45 + positionRatio * 0.55;
+    const baseOpacity = 0.5 + positionRatio * 0.5;
 
-    // Hover cascade delay
-    const hoverDelay = letterIndex * 40; // ms
+    // Hover cascade delay - staggered for wave effect
+    const hoverDelay = letterIndex * 50;
 
     return (
       <svg
@@ -219,16 +219,19 @@ export function SynapseLogo({ className = "" }: SynapseLogoProps) {
         className="synapse-letter"
         style={{
           marginRight: letterIndex < totalLetters - 1 ? letterSpacing : 0,
-          transition: "transform 350ms cubic-bezier(0.25, 1, 0.5, 1)",
-          transform: isHovered ? "translateY(-2px)" : "translateY(0)",
+          transition: "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 350ms ease",
+          transform: isHovered ? "translateY(-3px)" : "translateY(0)",
           transitionDelay: `${hoverDelay}ms`,
+          filter: isHovered ? "drop-shadow(0 0 8px var(--accent-subtle))" : "none",
         }}
       >
-        {/* Connection paths - subtle and refined */}
+        {/* Connection paths with gradient effect on hover */}
         {paths.map((path, pathIndex) => {
           const fromNode = nodes.find((n) => n.id === path.from);
           const toNode = nodes.find((n) => n.id === path.to);
           if (!fromNode || !toNode) return null;
+
+          const pathDelay = hoverDelay + pathIndex * 20;
 
           return (
             <line
@@ -238,37 +241,52 @@ export function SynapseLogo({ className = "" }: SynapseLogoProps) {
               x2={toNode.x}
               y2={toNode.y}
               stroke={isHovered ? "var(--accent)" : "currentColor"}
-              strokeWidth={isHovered ? 1.8 : 1.2}
+              strokeWidth={isHovered ? 2 : 1.2}
               strokeLinecap="round"
-              opacity={isHovered ? baseOpacity * 1.2 : baseOpacity * 0.65}
+              opacity={isHovered ? baseOpacity * 1.3 : baseOpacity * 0.6}
               className="synapse-path"
               style={{
-                transition: `all 350ms cubic-bezier(0.25, 1, 0.5, 1)`,
-                transitionDelay: `${hoverDelay + pathIndex * 12}ms`,
-                filter: isHovered ? "drop-shadow(0 0 2px var(--accent-subtle))" : "none",
+                transition: `all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+                transitionDelay: `${pathDelay}ms`,
+                filter: isHovered ? "drop-shadow(0 0 4px var(--accent))" : "none",
               }}
             />
           );
         })}
 
-        {/* Neural nodes - refined and subtle */}
+        {/* Neural nodes with enhanced glow effects */}
         {nodes.map((node, nodeIndex) => {
-          const nodeDelay = hoverDelay + nodeIndex * 15;
+          const nodeDelay = hoverDelay + nodeIndex * 25;
 
           return (
             <g key={node.id}>
-              {/* Subtle outer ring - appears on hover */}
+              {/* Outer glow ring - appears on hover */}
               <circle
                 cx={node.x}
                 cy={node.y}
-                r={isHovered ? 5 : 3}
+                r={isHovered ? 6 : 3}
                 fill="none"
                 stroke={isHovered ? "var(--accent)" : "currentColor"}
-                strokeWidth={0.5}
-                opacity={isHovered ? baseOpacity * 0.25 : baseOpacity * 0.15}
+                strokeWidth={isHovered ? 0.8 : 0.4}
+                opacity={isHovered ? baseOpacity * 0.35 : baseOpacity * 0.1}
                 style={{
-                  transition: `all 350ms cubic-bezier(0.25, 1, 0.5, 1)`,
+                  transition: `all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
                   transitionDelay: `${nodeDelay}ms`,
+                }}
+              />
+              
+              {/* Middle ring */}
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r={isHovered ? 4 : 2.5}
+                fill="none"
+                stroke={isHovered ? "var(--accent-subtle)" : "currentColor"}
+                strokeWidth={isHovered ? 1.2 : 0.6}
+                opacity={isHovered ? baseOpacity * 0.5 : baseOpacity * 0.2}
+                style={{
+                  transition: `all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+                  transitionDelay: `${nodeDelay + 20}ms`,
                 }}
               />
               
@@ -276,28 +294,28 @@ export function SynapseLogo({ className = "" }: SynapseLogoProps) {
               <circle
                 cx={node.x}
                 cy={node.y}
-                r={isHovered ? 2.8 : 2.2}
+                r={isHovered ? 3.2 : 2.2}
                 fill={isHovered ? "var(--accent)" : "currentColor"}
-                opacity={isHovered ? baseOpacity * 1.1 : baseOpacity * 0.85}
+                opacity={isHovered ? baseOpacity * 1.2 : baseOpacity * 0.9}
                 style={{
-                  transition: `all 350ms cubic-bezier(0.25, 1, 0.5, 1)`,
-                  transitionDelay: `${nodeDelay}ms`,
+                  transition: `all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+                  transitionDelay: `${nodeDelay + 40}ms`,
                   filter: isHovered 
-                    ? "drop-shadow(0 0 3px var(--accent))" 
+                    ? "drop-shadow(0 0 6px var(--accent)) drop-shadow(0 0 12px var(--accent-subtle))" 
                     : "none",
                 }}
               />
               
-              {/* Core highlight - subtle bright spot on hover */}
+              {/* Core highlight - bright spot on hover */}
               <circle
                 cx={node.x}
                 cy={node.y}
-                r={isHovered ? 1.2 : 0}
+                r={isHovered ? 1.5 : 0}
                 fill={isHovered ? "var(--text-primary)" : "currentColor"}
-                opacity={isHovered ? 0.8 : 0}
+                opacity={isHovered ? 0.9 : 0}
                 style={{
-                  transition: `all 250ms cubic-bezier(0.25, 1, 0.5, 1)`,
-                  transitionDelay: `${nodeDelay + 50}ms`,
+                  transition: `all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+                  transitionDelay: `${nodeDelay + 60}ms`,
                 }}
               />
             </g>
@@ -319,8 +337,10 @@ export function SynapseLogo({ className = "" }: SynapseLogoProps) {
         userSelect: "none",
         WebkitUserSelect: "none",
         color: "var(--text-primary)",
-        transition: "filter 350ms cubic-bezier(0.25, 1, 0.5, 1)",
-        filter: isHovered ? "drop-shadow(0 0 20px var(--accent-subtle))" : "none",
+        transition: "all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        filter: isHovered 
+          ? "drop-shadow(0 0 30px var(--accent-subtle)) drop-shadow(0 0 60px var(--accent-subtle))" 
+          : "drop-shadow(0 0 0 transparent)",
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -330,8 +350,8 @@ export function SynapseLogo({ className = "" }: SynapseLogoProps) {
         style={{
           display: "flex",
           alignItems: "center",
-          transition: "transform 350ms cubic-bezier(0.25, 1, 0.5, 1)",
-          transform: isHovered ? "scale(1.02)" : "scale(1)",
+          transition: "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+          transform: isHovered ? "scale(1.03)" : "scale(1)",
         }}
       >
         {word.split("").map((letter, index) => renderLetter(letter, index))}

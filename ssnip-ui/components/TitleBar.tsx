@@ -29,37 +29,44 @@ export function TitleBar({ subtitle, onOpenSettings }: Props) {
         fontFamily: 'var(--font-mono)'
       }}
     >
-      {/* Left: Title */}
-      <div
-        className="flex items-center gap-3 flex-1 cursor-default"
-      >
-        {/* App Icon */}
-        <img 
-          src="/icons/app-icon.png"
-          alt="SynapseSnip"
-          className="w-5 h-5 rounded"
-          style={{ objectFit: 'cover' }}
-        />
-        
-        <span 
-          className="text-sm font-bold"
-          style={{ color: 'var(--text-primary)' }}
+        {/* Left: Title */}
+        <div
+          className="flex items-center gap-3 flex-1 cursor-default"
         >
-          SynapseSnip
-        </span>
-        
-        {subtitle && (
-          <>
-            <span style={{ color: 'var(--border-default)' }}>/</span>
-            <span 
-              className="text-sm font-medium"
-              style={{ color: 'var(--text-tertiary)' }}
-            >
-              {subtitle}
-            </span>
-          </>
-        )}
-      </div>
+          {/* App Icon */}
+          <img 
+            src="/icons/app-icon.png"
+            alt="SynapseSnip"
+            className="w-5 h-5 rounded"
+            style={{ objectFit: 'cover' }}
+          />
+          
+          <span 
+            className="text-sm"
+            style={{ 
+              color: 'var(--text-primary)',
+              fontWeight: 500,
+              letterSpacing: '-0.01em',
+            }}
+          >
+            SynapseSnip
+          </span>
+          
+          {subtitle && (
+            <>
+              <span style={{ color: 'var(--border-default)', opacity: 0.6 }}>/</span>
+              <span 
+                className="text-sm"
+                style={{ 
+                  color: 'var(--text-tertiary)',
+                  fontWeight: 400,
+                }}
+              >
+                {subtitle}
+              </span>
+            </>
+          )}
+        </div>
 
       {/* Right: Controls */}
       <div className="flex items-center gap-1">

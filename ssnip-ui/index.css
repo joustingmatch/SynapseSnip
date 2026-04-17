@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap');
+/* ============================================================================
+   SYNAPSE SNIP — DISTINCTIVE TYPOGRAPHY
+   Using DM Mono for its geometric character and Victor Mono for fallback
+   ============================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Victor+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -122,10 +126,17 @@
   --space-24: 96px;
   
   /* ==========================================================================
-     OPENCODE TYPOGRAPHY (Berkeley Mono / IBM Plex Mono fallback)
-     ========================================================================== */
-  --font-mono: 'Berkeley Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --font-sans: var(--font-mono); /* OpenCode uses monospace everywhere */
+      DISTINCTIVE TYPOGRAPHY
+      DM Mono: Geometric monospace with personality
+      Victor Mono: Elegant fallback with cursive italics
+      ========================================================================== */
+  --font-mono: 'DM Mono', 'Victor Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'Fira Code', monospace;
+  --font-sans: var(--font-mono);
+  
+  /* Font weight scale - DM Mono has lighter, more refined weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
   
   /* Typography Scale */
   --text-xs: 11px;
@@ -632,12 +643,16 @@
 
   body {
     font-family: var(--font-mono);
-    font-size: var(--text-lg); /* OpenCode: 16px base */
-    font-weight: var(--font-normal);
-    line-height: 1.5;
+    font-size: var(--text-lg);
+    font-weight: var(--font-regular);
+    line-height: 1.6;
     color: var(--text-primary);
     background: var(--bg-primary);
-    letter-spacing: 0; /* Monospace doesn't need tracking adjustment */
+    letter-spacing: -0.01em; /* Slight tightening for DM Mono */
+    font-feature-settings: 'liga' 1, 'calt' 1; /* Enable ligatures */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Transparent routes (overlay, notifications, floating) must not paint a
@@ -1065,7 +1080,125 @@
 }
 
 /* ============================================================================
-   ANIMATIONS (minimal, purposeful)
+   BACKGROUND TEXTURES & PATTERNS
+   ============================================================================ */
+
+/* Subtle noise texture overlay */
+.bg-noise {
+  position: relative;
+}
+
+.bg-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dot grid pattern */
+.bg-grid {
+  background-image: 
+    radial-gradient(circle at center, var(--border-subtle) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center top;
+}
+
+/* Fine line grid */
+.bg-grid-lines {
+  background-image: 
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+}
+
+/* Subtle diagonal lines */
+.bg-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    var(--border-subtle) 10px,
+    var(--border-subtle) 11px
+  );
+  opacity: 0.5;
+}
+
+/* Radial gradient glow for focus states */
+.bg-glow {
+  position: relative;
+}
+
+.bg-glow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    var(--accent-subtle) 0%,
+    transparent 70%
+  );
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================================
+   AMBIENT FLOATING ELEMENTS
+   ============================================================================ */
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  pointer-events: none;
+  animation: ambient-float 20s ease-in-out infinite;
+}
+
+.ambient-orb-1 {
+  width: 300px;
+  height: 300px;
+  background: var(--accent-subtle);
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.ambient-orb-2 {
+  width: 200px;
+  height: 200px;
+  background: var(--accent-subtle);
+  bottom: -50px;
+  left: -50px;
+  animation-delay: -10s;
+  animation-duration: 25s;
+}
+
+@keyframes ambient-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  50% {
+    transform: translate(-20px, 30px) scale(0.95);
+  }
+  75% {
+    transform: translate(-30px, -10px) scale(1.02);
+  }
+}
+
+/* ============================================================================
+   ENHANCED ANIMATIONS
    ============================================================================ */
 
 @layer utilities {
@@ -1077,7 +1210,18 @@
   @keyframes fade-in-up {
     from { 
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(12px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in-down {
+    from { 
+      opacity: 0;
+      transform: translateY(-12px);
     }
     to { 
       opacity: 1;
@@ -1088,9 +1232,23 @@
   @keyframes scale-in {
     from { 
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.96);
     }
     to { 
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes scale-in-spring {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    70% {
+      transform: scale(1.02);
+    }
+    100% {
       opacity: 1;
       transform: scale(1);
     }
@@ -1104,11 +1262,65 @@
   @keyframes slide-in-right {
     from { 
       opacity: 0;
-      transform: translateX(20px);
+      transform: translateX(24px);
     }
     to { 
       opacity: 1;
       transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-in-left {
+    from { 
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes border-glow {
+    0%, 100% {
+      border-color: var(--border-default);
+      box-shadow: 0 0 0 0 var(--accent-subtle);
+    }
+    50% {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px 0 var(--accent-subtle);
+    }
+  }
+
+  @keyframes letter-stagger {
+    from {
+      opacity: 0;
+      transform: translateY(20px) rotateX(-40deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+  }
+
+  @keyframes number-flip {
+    0% {
+      transform: rotateX(0deg);
+    }
+    50% {
+      transform: rotateX(-90deg);
+    }
+    100% {
+      transform: rotateX(0deg);
     }
   }
   
@@ -1119,14 +1331,51 @@
   .animate-fade-in-up {
     animation: fade-in-up var(--duration-normal) var(--ease-out-expo);
   }
+
+  .animate-fade-in-down {
+    animation: fade-in-down var(--duration-normal) var(--ease-out-expo);
+  }
   
   .animate-scale-in {
     animation: scale-in var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .animate-scale-in-spring {
+    animation: scale-in-spring 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   
   .animate-slide-in-right {
     animation: slide-in-right var(--duration-slow) var(--ease-out-expo);
   }
+
+  .animate-slide-in-left {
+    animation: slide-in-left var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-border-glow {
+    animation: border-glow 2s ease-in-out infinite;
+  }
+
+  /* Stagger utilities */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
+  .stagger-7 { animation-delay: 350ms; }
+  .stagger-8 { animation-delay: 400ms; }
 }
 
 /* ============================================================================

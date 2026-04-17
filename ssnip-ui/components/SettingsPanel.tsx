@@ -157,22 +157,37 @@ export function SettingsPanel() {
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-default)',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02)',
+          boxShadow: '0 32px 64px -16px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03)',
           transition: 'transform var(--duration-normal) var(--ease-out-quart), opacity var(--duration-normal) var(--ease-out-quart)',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
+        {/* Subtle noise texture overlay */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            opacity: 0.02,
+            zIndex: 0,
+          }}
+        />
         {/* Header */}
         <header 
-          className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: '1px solid var(--border-subtle)' }}
+          className="flex items-center justify-between px-6 py-4 relative z-10"
+          style={{ 
+            borderBottom: '1px solid var(--border-subtle)',
+            background: 'linear-gradient(180deg, var(--bg-secondary) 0%, var(--surface-default) 100%)',
+          }}
         >
           <h2 
             id="settings-title"
-            className="text-sm font-medium"
+            className="text-sm"
             style={{ 
               color: 'var(--text-primary)', 
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.02em',
+              letterSpacing: '-0.01em',
+              fontWeight: 500,
             }}
           >
             Settings
@@ -204,7 +219,7 @@ export function SettingsPanel() {
         <div className="flex flex-1 overflow-hidden" style={{ minHeight: '420px' }}>
           {/* Sidebar Navigation */}
           <nav 
-            className="relative w-48 flex-shrink-0 py-3 px-3 flex flex-col"
+            className="relative w-48 flex-shrink-0 py-3 px-3 flex flex-col z-10"
             style={{ 
               borderRight: '1px solid var(--border-subtle)',
               background: 'var(--bg-primary)',
