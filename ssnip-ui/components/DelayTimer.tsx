@@ -10,34 +10,38 @@ export function DelayTimer({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     if (countdown <= 0) return;
-    
-    // Handle number change animation
+
     if (countdown !== prevCountdownRef.current && prevCountdownRef.current !== 0) {
       setNumberState("exiting");
-      
+
       const exitTimeout = setTimeout(() => {
         setDisplayNumber(countdown);
         setNumberState("entering");
-        
+
         const enterTimeout = setTimeout(() => {
           setNumberState("idle");
         }, 150);
-        
+
         return () => clearTimeout(enterTimeout);
       }, 100);
-      
+
       prevCountdownRef.current = countdown;
       return () => clearTimeout(exitTimeout);
     }
-    
+
+    setDisplayNumber(countdown);
     prevCountdownRef.current = countdown;
-    
+  }, [countdown]);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+
     const t = setTimeout(() => {
       if (countdown - 1 <= 0) onDone();
       setCountdown(countdown - 1);
     }, 1000);
     return () => clearTimeout(t);
-  }, [countdown, displayNumber, onDone, setCountdown]);
+  }, [countdown, onDone, setCountdown]);
 
   if (countdown <= 0) return null;
   

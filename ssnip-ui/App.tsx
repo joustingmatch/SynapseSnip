@@ -1,11 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { check, type Update } from "@tauri-apps/plugin-updater";
 import { DelayTimer } from "./components/DelayTimer";
-import { SettingsPanel } from "./components/SettingsPanel";
 import { TitleBar } from "./components/TitleBar";
-import { UpdateModal } from "./components/UpdateModal";
 import {
   beginCapture,
   copyImageToClipboard,
@@ -18,6 +15,32 @@ import type { CaptureEvent, CaptureMode, Settings, VideoRecordingResult } from "
 import { DEFAULT_SETTINGS } from "./utils/defaultSettings";
 import { formatFilename } from "./utils/filename";
 import { applyTheme } from "./utils/theme";
+
+const SettingsPanel = lazy(async () => {
+  const mod = await import("./components/SettingsPanel");
+  return { default: mod.SettingsPanel };
+});
+
+const UpdateModal = lazy(async () => {
+  const mod = await import("./components/UpdateModal");
+  return { default: mod.UpdateModal };
+});
+
+type Update = Awaited<ReturnType<typeof import("@tauri-apps/plugin-updater")["check"]>>;
+
+function runWhenIdle(task: () => void) {
+  const idleWindow = window as Window & {
+    requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number;
+    cancelIdleCallback?: (handle: number) => void;
+  };
+
+  if (typeof idleWindow.requestIdleCallback === "function") {
+    const id = idleWindow.requestIdleCallback(() => task(), { timeout: 1500 });
+    return () => idleWindow.cancelIdleCallback?.(id);
+  }
+  const id = window.setTimeout(task, 250);
+  return () => window.clearTimeout(id);
+}
 
 const CAPTURE_MODES: { id: CaptureMode; label: string; description: string; icon: JSX.Element }[] = [
   {
@@ -128,13 +151,14 @@ export default function App() {
       try {
         const dismissedKey = "synapsesnip:dismissedRemoteUpdateVersion";
         const dismissedVersion = localStorage.getItem(dismissedKey);
+        const { check } = await import("@tauri-apps/plugin-updater");
         const update = await check();
 
-        if (!update) {
+        if (!update || cancelled) {
           return;
         }
 
-        if (!cancelled && dismissedVersion !== update.version) {
+        if (dismissedVersion !== update.version) {
           setAvailableUpdate(update);
         }
       } catch (error) {
@@ -142,10 +166,13 @@ export default function App() {
       }
     };
 
-    void checkForUpdate();
+    const cancelIdle = runWhenIdle(() => {
+      void checkForUpdate();
+    });
 
     return () => {
       cancelled = true;
+      cancelIdle();
     };
   }, []);
 
@@ -566,16 +593,22 @@ export default function App() {
       </main>
 
       {countdown > 0 && <DelayTimer onDone={() => setCountdown(0)} />}
-      {showSettings && <SettingsPanel />}
-      
-      {/* Update Modal */}
-      <UpdateModal
-        update={availableUpdate}
-        onInstall={installUpdate}
-        onDismiss={dismissUpdate}
-        isInstalling={isInstallingUpdate}
-        error={updateError}
-      />
+      {showSettings && (
+        <Suspense fallback={null}>
+          <SettingsPanel />
+        </Suspense>
+      )}
+      {(availableUpdate || isInstallingUpdate || updateError) && (
+        <Suspense fallback={null}>
+          <UpdateModal
+            update={availableUpdate}
+            onInstall={installUpdate}
+            onDismiss={dismissUpdate}
+            isInstalling={isInstallingUpdate}
+            error={updateError}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

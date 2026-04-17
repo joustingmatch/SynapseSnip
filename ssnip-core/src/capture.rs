@@ -984,7 +984,12 @@ pub fn mark_overlay_ready(app: AppHandle) {
 #[tauri::command]
 pub async fn begin_capture(app: AppHandle, mode: String) -> AppResult<()> {
     let guard = CaptureGuard::acquire()?;
-    hide_main(&app);
+    let should_hide_main = mode != "rect";
+    if should_hide_main {
+        hide_main(&app);
+    } else {
+        *MAIN_WAS_VISIBLE.lock().unwrap() = false;
+    }
 
     let result = match mode.as_str() {
         "fullscreen" => {

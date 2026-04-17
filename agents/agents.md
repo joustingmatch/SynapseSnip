@@ -56,6 +56,7 @@ Read this file first. Follow it exactly.
 ## Release Workflow Rule (Ask First)
 
 - Before running release workflow, ask: `Run release workflow now? (takes ~10-25 min)`.
+- Release workflow is manual-only via `workflow_dispatch`.
 - Do not run release workflow unless user says yes.
 
 ## Release Workflow Steps (For Simple LLMs)

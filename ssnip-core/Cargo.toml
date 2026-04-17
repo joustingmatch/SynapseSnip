@@ -1,6 +1,6 @@
 [package]
 name = "synapsesnip"
-version = "0.1.7"
+version = "0.1.8"
 description = "Windows Snipping Tool clone"
 authors = ["you"]
 edition = "2021"
@@ -39,6 +39,5 @@ urlencoding = "2"
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
-
 
 

@@ -1,13 +1,6 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - package.json
-      - ssnip-core/tauri.conf.json
-      - ssnip-core/Cargo.toml
   workflow_dispatch:
 
 permissions:

@@ -27,7 +27,14 @@ Commit with a clear message, for example:
 
 `chore(release): bump version to v0.1.1`
 
-## 4) Launch Check
+## 4) Trigger Release Workflow
+
+Release publishing is manual-only. After the version bump commit is pushed, trigger the GitHub workflow:
+
+- `gh workflow run release.yml`
+- `gh run list --workflow release.yml --limit 1`
+
+## 5) Launch Check
 
 After installing the new build, open the app once and confirm:
 
